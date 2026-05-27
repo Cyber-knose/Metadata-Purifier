@@ -96,17 +96,6 @@ Analyzing metadata helps in:
 </table>
 
 
----
-
-## 💻 Getting Started
-
-```diff
-+ git clone https://github.com/Cyber-knose/Metadata-Purifier
-+ cd Metadata-Purifier
-+ open index.html
-
-
-
 ### 🕵️ What Can Be Found Using Metadata Analysis?
 
 Metadata analysis can reveal a shocking amount of personal and investigative information
@@ -153,3 +142,10 @@ CCPA (California): Aids in data minimization practices
 IT Act (India): Aligns with cybersecurity guidelines for data protection
 🔐 Stay Safe, Stay Invisible
 "In the digital world, the ghost in the machine is the metadata."
+
+## 💻 Getting Started
+
+```diff
++ git clone https://github.com/Cyber-knose/Metadata-Purifier
++ cd Metadata-Purifier
++ open index.html
