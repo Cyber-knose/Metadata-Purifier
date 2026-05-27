@@ -11,6 +11,11 @@ Image Metadata Purifier A lightweight tool that strips sensitive metadata from i
 
 ---
 
++----------+     +----------+     +----------+     +----------+
+|  UPLOAD  | --> | ANALYZE  | --> |  CLEAN   | --> | DOWNLOAD |
++----------+     +----------+     +----------+     +----------+
+    📤            👁️              🧹              💾
+
 ### 🔍 How It Works
 
 1. **Upload** your image  
