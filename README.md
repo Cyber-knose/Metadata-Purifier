@@ -74,10 +74,12 @@ MetaClean is a privacy-first tool designed to bridge the gap between technical f
 Remove hidden tracking data before sharing images online
 Prevent location tracking by stripping GPS tags
 Maintain anonymity on anonymous posting platforms
+
 ✅ 2. For Cyber Crime Investigators & Forensics:
 Inspect EXIF/GPS data to verify evidence authenticity
 Generate file hashes (SHA-256, MD5) to prove file integrity
 Understand what data their own images are leaking
+
 ✅ 3. For Security Researchers:
 Analyze metadata leakage in OSINT missions
 Test organizational data leakage policies
