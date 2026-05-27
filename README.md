@@ -62,6 +62,39 @@ Analyzing metadata helps in:
 *   **OSINT (Open Source Intelligence):** Gathering info about targets
 
 ---
+## 🛠️ Tech Stack
+
+<table>
+    <tr>
+        <td valign="center" width="100">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" width="60"/>
+        </td>
+        <td valign="center">
+            <b>HTML5</b> - Structure & Semantics
+        </td>
+        <td valign="center" width="100">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" width="60"/>
+        </td>
+        <td valign="center">
+            <b>CSS3</b> - Styling & Animations
+        </td>
+    </tr>
+    <tr>
+        <td valign="center" width="100">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width="60"/>
+        </td>
+        <td valign="center">
+            <b>JavaScript (ES6+)</b> - Core Logic
+        </td>
+        <td valign="center" width="100">
+            <img src="https://img.icons8.com/color/48/000000/google-fonts.png" width="60"/>
+        </td>
+        <td valign="center">
+            <b>Orbitron & Roboto</b> - Typography
+        </td>
+    </tr>
+</table>
+
 
 ### 🕵️ What Can Be Found Using Metadata Analysis?
 
