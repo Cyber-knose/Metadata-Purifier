@@ -65,10 +65,12 @@ Analyzing metadata helps in:
 
 ### 🕵️ What Can Be Found Using Metadata Analysis?
 
-Metadata analysis can reveal a shocking amount of personal and investigative information:
+Metadata analysis can reveal a shocking amount of personal and investigative information
+
 
 🛡️ How Metadata purifier Helps
-MetaClean is a privacy-first tool designed to bridge the gap between technical forensics and user privacy.
+
+Metadata purifier is a privacy-first tool designed to bridge the gap between technical forensics and user privacy.
 
 ✅ 1. For Privacy Advocates:
 Remove hidden tracking data before sharing images online
