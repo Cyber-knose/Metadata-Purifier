@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaClean - Neon EXIF Remover</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/piexifjs/1.0.6/piexif.js"></script>
+    <style>
+        :root {
+            --bg-color: #05050a;
+            --neon-blue: #00f3ff;
+            --neon-glow: 0 0 10px rgba(0, 243, 255, 0.7);
+            --glass: rgba(255, 255, 255, 0.05);
+            --text-color: #e0e0e0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 50%, #0a1525 0%, #05050a 100%);
+        }
+        header { text-align: center; margin-bottom: 30px; width: 100%; max-width: 1100px; }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--neon-blue);
+            text-shadow: var(--neon-glow);
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        .created-by {
+            color: #fff;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--neon-blue);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        .section { display: flex; flex-direction: column; gap: 15px; }
+        .upload-area {
+            border: 2px dashed var(--neon-blue);
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgba(0, 243, 255, 0.05);
+        }
+        .upload-area:hover {
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: var(--neon-glow);
+        }
+        .preview-box {
+            width: 100%;
+            height: 350px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: #000;
+        }
+        .preview-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .metadata-list {
+            width: 100%;
+            height: 450px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            border: 1px solid rgba(0, 243, 255, 0.1);
+        }
+        .meta-section-title {
+            color: var(--neon-blue);
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid var(--neon-blue);
+            padding-bottom: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+        }
+        .meta-section-title:first-child { margin-top: 0; }
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .meta-key { color: #aaa; }
+        .meta-val { color: #fff; text-align: right; max-width: 200px; word-break: break-all; }
+        .btn {
+            background: transparent;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 15px 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 243, 255, 0.2);
+        }
+        .btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+        .btn:disabled {
+            border-color: #555;
+            color: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+            background: transparent;
+        }
+        input[type="file"] { display: none; }
+        .status-msg { color: #00ff00; font-size: 0.9rem; text-align: center; height: 20px; margin-top: 5px; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a10; }
+        ::-webkit-scrollbar-thumb { background: #005555; border-radius: 4px; }
+        @media (max-width: 900px) {
+            .app-container { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>METADATA PURIFIER</h1>
+        <div class="created-by">Created by Priyanshu Jangra</div>
+    </header>
+
+    <div class="app-container">
+        <div class="section">
+            <label class="upload-area" for="imageInput">
+                <div>
+                    <strong style="color: var(--neon-blue); font-size: 1.2rem;">CLICK TO UPLOAD</strong><br>
+                    <span style="font-size: 0.8rem;">Supports JPG / JPEG</span>
+                </div>
+                <input type="file" id="imageInput" accept="image/jpeg, image/jpg, image/png, image/webp">
+            </label>
+            <div class="preview-box">
+                <img id="imagePreview" src="" alt="Preview">
+                <span id="placeholderText" style="color: #555;">Image Preview</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <div style="color: var(--neon-blue); font-family: 'Orbitron'; font-size: 1.1rem;">COMPLETE METADATA:</div>
+            <div class="metadata-list" id="metaDisplay">
+                <div style="color: #555; text-align: center; margin-top: 30px;">Upload an image to see all metadata</div>
+            </div>
+            <div class="status-msg" id="statusMsg"></div>
+            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                <button class="btn" id="removeBtn" onclick="removeMetadata()">Remove Metadata</button>
+                <button class="btn" id="downloadBtn" onclick="downloadImage()">Download Clean Image</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var originalImageData = null;
+        var originalFileName = "image.jpg";
+        var cleanImageData = null;
+        var originalFileBytes = null;
+
+        var imageInput = document.getElementById('imageInput');
+        var imagePreview = document.getElementById('imagePreview');
+        var placeholderText = document.getElementById('placeholderText');
+        var metaDisplay = document.getElementById('metaDisplay');
+        var statusMsg = document.getElementById('statusMsg');
+        var removeBtn = document.getElementById('removeBtn');
+        var downloadBtn = document.getElementById('downloadBtn');
+
+        imageInput.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (!file) return;
+
+            originalFileName = file.name;
+            
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                originalImageData = event.target.result;
+                imagePreview.src = originalImageData;
+                imagePreview.style.display = 'block';
+                placeholderText.style.display = 'none';
+                
+                file.arrayBuffer().then(function(buffer) {
+                    originalFileBytes = buffer;
+                    extractAllMetadata(originalImageData, file);
+                });
+                
+                removeBtn.disabled = false;
+                downloadBtn.disabled = true;
+                statusMsg.textContent = "";
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function extractAllMetadata(dataUrl, file) {
+            var html = '';
+
+            html += '<div class="meta-section-title">FILE BASIC INFORMATION</div>';
+            html += formatMetaItem('File Name', file.name);
+            html += formatMetaItem('File Type (MIME)', file.type);
+            html += formatMetaItem('File Size', formatBytes(file.size));
+            html += formatMetaItem('Last Modified Date', new Date(file.lastModified).toLocaleString());
+
+            html += '<div class="meta-section-title">IMAGE HASHES (DIGITAL SIGNATURES)</div>';
+            if (originalFileBytes) {
+                computeHash('SHA-256', originalFileBytes).then(function(sha256) {
+                    html += formatMetaItem('SHA-256 Hash', sha256);
+                    computeHash('MD5', originalFileBytes).then(function(md5) {
+                        html += formatMetaItem('MD5 Hash', md5);
+                        loadExifData(dataUrl, html, file);
+                    });
+                });
+            } else {
+                loadExifData(dataUrl, html, file);
+            }
+        }
+
+        function loadExifData(dataUrl, html, file) {
+            try {
+                var exifObj = piexif.load(dataUrl);
+                
+                if (exifObj['GPS']) {
+                    html += '<div class="meta-section-title">GPS LOCATION DATA</div>';
+                    var gpsTags = piexif.GPSIFD;
+                    if(exifObj['GPS'][gpsTags.GPSLatitude]) {
+                        html += formatMetaItem('Latitude (DMS)', exifObj['GPS'][gpsTags.GPSLatitude]);
+                        html += formatMetaItem('Latitude Ref', exifObj['GPS'][gpsTags.GPSLatitudeRef]);
+                    }
+                    if(exifObj['GPS'][gpsTags.GPSLongitude]) {
+                        html += formatMetaItem('Longitude (DMS)', exifObj['GPS'][gpsTags.GPSLongitude]);
+                        html += formatMetaItem('Longitude Ref', exifObj['GPS'][gpsTags.GPSLongitudeRef]);
+                    }
+                    if(exifObj['GPS'][gpsTags.GPSAltitude]) {
+                        html += formatMetaItem('Altitude', exifObj['GPS'][gpsTags.GPSAltitude] + ' m');
+                    }
+                    if(exifObj['GPS'][gpsTags.GPSDateStamp]) {
+                        html += formatMetaItem('GPS Date Stamp', exifObj['GPS'][gpsTags.GPSDateStamp]);
+                    }
+                }
+
+                if (exifObj['0th']) {
+                    html += '<div class="meta-section-title">CAMERA & DEVICE INFO</div>';
+                    var tiffTags = piexif.ImageIFD;
+                    html += formatMetaItem('Camera Make', exifObj['0th'][tiffTags.Make]);
+                    html += formatMetaItem('Camera Model', exifObj['0th'][tiffTags.Model]);
+                    html += formatMetaItem('Software Used', exifObj['0th'][tiffTags.Software]);
+                    html += formatMetaItem('Artist/Creator', exifObj['0th'][tiffTags.Artist]);
+                    html += formatMetaItem('Copyright', exifObj['0th'][tiffTags.Copyright]);
+                    html += formatMetaItem('Image Description', exifObj['0th'][tiffTags.ImageDescription]);
+                }
+
+                if (exifObj['Exif']) {
+                    html += '<div class="meta-section-title">PHOTO SETTINGS & CAMERA DATA</div>';
+                    var exifTags = piexif.ExifIFD;
+                    html += formatMetaItem('Date/Time Original', exifObj['Exif'][exifTags.DateTimeOriginal]);
+                    html += formatMetaItem('Date/Time Digitized', exifObj['Exif'][exifTags.DateTimeDigitized]);
+                    html += formatMetaItem('F-Number (Aperture)', exifObj['Exif'][exifTags.FNumber]);
+                    html += formatMetaItem('Exposure Time', exifObj['Exif'][exifTags.ExposureTime]);
+                    html += formatMetaItem('ISO Speed Rating', exifObj['Exif'][exifTags.ISOSpeedRatings]);
+                    html += formatMetaItem('Focal Length', exifObj['Exif'][exifTags.FocalLength]);
+                    html += formatMetaItem('Flash Fired', exifObj['Exif'][exifTags.Flash]);
+                    html += formatMetaItem('White Balance', exifObj['Exif'][exifTags.WhiteBalance]);
+                    html += formatMetaItem('Metering Mode', exifObj['Exif'][exifTags.MeteringMode]);
+                    html += formatMetaItem('Exposure Program', exifObj['Exif'][exifTags.ExposureProgram]);
+                }
+
+                if (exifObj['Exif']) {
+                    html += '<div class="meta-section-title">LENS & ADVANCED DETAILS</div>';
+                    var exifTags = piexif.ExifIFD;
+                    html += formatMetaItem('Lens Model', exifObj['Exif'][exifTags.LensModel]);
+                    html += formatMetaItem('Lens Make', exifObj['Exif'][exifTags.LensMake]);
+                    html += formatMetaItem('Lens Serial Number', exifObj['Exif'][exifTags.LensSerialNumber]);
+                    html += formatMetaItem('Body Serial Number', exifObj['Exif'][exifTags.BodySerialNumber]);
+                    html += formatMetaItem('Image Unique ID', exifObj['Exif'][exifTags.ImageUniqueID]);
+                    html += formatMetaItem('User Comment', exifObj['Exif'][exifTags.UserComment]);
+                }
+
+            } catch (e) {
+                console.error(e);
+                html += '<div class="meta-section-title">NOTE</div>';
+                html += formatMetaItem('Status', 'No EXIF data found or unsupported format');
+            }
+
+            metaDisplay.innerHTML = html;
+        }
+
+        function formatMetaItem(key, value) {
+            if (value === undefined || value === null || value === "") return '';
+            return '<div class="meta-item"><span class="meta-key">' + key + '</span><span class="meta-val">' + value + '</span></div>';
+        }
+
+        function computeHash(algorithm, buffer) {
+            return new Promise(function(resolve) {
+                try {
+                    crypto.subtle.digest(algorithm, buffer).then(function(hashBuffer) {
+                        var hashArray = Array.from(new Uint8Array(hashBuffer));
+                        var hashHex = hashArray.map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+                        resolve(hashHex);
+                    }).catch(function() {
+                        resolve('Not supported');
+                    });
+                } catch (e) {
+                    resolve('Not supported');
+                }
+            });
+        }
+
+        function formatBytes(bytes, decimals) {
+            if (!+bytes) return '0 Bytes';
+            var k = 1024;
+            var dm = decimals < 0 ? 0 : decimals;
+            var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            var i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+        }
+
+        function removeMetadata() {
+            if (!originalImageData) return;
+            try {
+                var emptyExif = {"0th":{}, "Exif":{}, "GPS":{}, "1st":{}, "thumbnail":null};
+                var exifBytes = piexif.dump(emptyExif);
+                cleanImageData = piexif.insert(exifBytes, originalImageData);
+                imagePreview.src = cleanImageData;
+                metaDisplay.innerHTML = '<div class="meta-section-title">SUCCESS</div><div class="meta-item"><span class="meta-key">Status</span><span class="meta-val" style="color:#00ff00;">All Metadata Removed!</span></div>';
+                statusMsg.textContent = "Success: Metadata removed successfully!";
+                downloadBtn.disabled = false;
+            } catch (e) {
+                alert("Error removing metadata. Please try a different image.");
+                console.error(e);
+            }
+        }
+
+        function downloadImage() {
+            if (!cleanImageData) return;
+            var link = document.createElement('a');
+            link.href = cleanImageData;
+            link.download = 'clean_' + originalFileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
