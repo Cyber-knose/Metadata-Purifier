@@ -9,17 +9,6 @@ Image Metadata Purifier A lightweight tool that strips sensitive metadata from i
   <img src="metaimage.png" alt="MetaClean Interface" width="100%" style="border-radius: 15px; border: 2px solid #00f3ff; box-shadow: 0 0 30px rgba(0,243,255,0.4);">
 </p>
 
----
-
-
-
-
-+----------+     +----------+     +----------+     +----------+
-|  UPLOAD  | --> | ANALYZE  | --> |  CLEAN   | --> | DOWNLOAD |
-+----------+     +----------+     +----------+     +----------+
-    📤            👁️              🧹              💾
-
-
 
 
 ### 🔍 How It Works
@@ -154,9 +143,19 @@ IT Act (India): Aligns with cybersecurity guidelines for data protection
 🔐 Stay Safe, Stay Invisible
 "In the digital world, the ghost in the machine is the metadata."
 
+### 📝 Usage Flow
+
+````markdown
++----------+     +----------+     +----------+     +----------+
+|  UPLOAD  | --> | ANALYZE  | --> |  CLEAN   | --> | DOWNLOAD |
++----------+     +----------+     +----------+     +----------+
+    📤            👁️              🧹              💾
+
+
 ## 💻 Getting Started
 
 ```diff
 + git clone https://github.com/Cyber-knose/Metadata-Purifier
 + cd Metadata-Purifier
 + open index.html
+
