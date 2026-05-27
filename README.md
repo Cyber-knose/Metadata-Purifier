@@ -96,6 +96,17 @@ Analyzing metadata helps in:
 </table>
 
 
+---
+
+## 💻 Getting Started
+
+```diff
++ git clone https://github.com/Cyber-knose/Metadata-Purifier
++ cd Metadata-Purifier
++ open index.html
+
+
+
 ### 🕵️ What Can Be Found Using Metadata Analysis?
 
 Metadata analysis can reveal a shocking amount of personal and investigative information
