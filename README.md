@@ -9,6 +9,11 @@ Image Metadata Purifier A lightweight tool that strips sensitive metadata from i
   <img src="metaimage.png" alt="MetaClean Interface" width="100%" style="border-radius: 15px; border: 2px solid #00f3ff; box-shadow: 0 0 30px rgba(0,243,255,0.4);">
 </p>
 
+## 🚀 Live Demo
+
+<a href="https://imgmta.netlify.app" target="_blank">
+  <img src="https://img.shields.io/badge/Click%20Here%20for%20Real%20Time%20Use-000000?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo"/>
+</a>
 
 
 ### 🔍 How It Works
